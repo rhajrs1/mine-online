@@ -68,6 +68,24 @@ function endGame(roomId, winnerId, reason){
   io.to(roomId).emit("game:over", { winner: winnerId, reason });
 }
 
+function calcVictoryInfo(scores, totalMines) {
+  const foundSum = Object.values(scores).reduce((a, b) => a + b, 0);
+  const minesLeft = totalMines - foundSum;
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) return {};
+  const [firstId, firstScore] = sorted[0];
+  const secondScore = sorted[1]?.[1] ?? 0;
+
+  const victoryInfo = {};
+  for (const [id, score] of Object.entries(scores)) {
+    // 내가 앞으로 needed개 더 먹으면, 무조건 1등을 역전 or 확정한다.
+    // (최고 점수 - 내 점수 + 남은 마인 + 1)
+    const topScore = (id === firstId) ? secondScore : firstScore;
+    victoryInfo[id] = (topScore - score) + minesLeft + 1;
+  }
+  return victoryInfo;
+}
+
 io.on("connection", socket => {
 
   socket.on("room:create", ({ width = 16, height = 16, mines = 41, minesRange, name = "P1", mode = 'TURN', stunSmall = 3, stunBig = 10, turnSeconds = 10 } = {}) => {
@@ -268,13 +286,34 @@ io.on("connection", socket => {
       u.owner = socket.id;
       io.to(roomId).emit("tile:update", u);
     });
-    io.to(roomId).emit("score:update", { scores: g.scores });
 
-    const need = g.minesHalfToWin;
-    if (g.scores[socket.id] >= need) {
-      endGame(roomId, socket.id, `First to ${need}+ mines`);
+    // -------------------------------
+    // ★ 승리 조건 및 남은 마인 info 계산 추가 ★
+    const totalMines = g.mines;
+    const foundSum = Object.values(g.scores).reduce((a,b)=>a+b, 0);
+    const minesLeft = totalMines - foundSum;
+    const arr = Object.entries(g.scores).sort((a,b)=>b[1]-a[1]);
+    let firstId = null, firstScore = 0, secondScore = 0;
+    if (arr.length >= 1) {
+      [firstId, firstScore] = arr[0];
+      secondScore = arr[1]?.[1] ?? 0;
+    }
+    // [변경된 종료 조건]
+    if (arr.length >= 2 && firstScore > (secondScore + minesLeft)) {
+      io.to(roomId).emit("score:update", {
+        scores: g.scores,
+        victoryInfo: calcVictoryInfo(g.scores, g.mines),
+        minesLeft: minesLeft
+      });
+      endGame(roomId, firstId, `역전 불가: ${firstScore} > ${secondScore} + ${minesLeft}`);
       return;
     }
+    io.to(roomId).emit("score:update", {
+      scores: g.scores,
+      victoryInfo: calcVictoryInfo(g.scores, g.mines),
+      minesLeft: minesLeft
+    });
+    // -------------------------------
 
     if (g.mode === 'TURN') {
       if (!res.hitMine) {

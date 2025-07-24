@@ -60,6 +60,14 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
   gap: 6px;
 }
 .slot-name { color: #222; }
+.slot-victory {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #444;
+}
 .slot-score {
   position: absolute;
   bottom: 2px;
@@ -230,6 +238,5 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
   box-shadow: 0 0 24px 8px rgba(80,255,120,0.18);
   border: 3px solid rgba(80,255,120,0.37);
   border-radius: 10px;
-  margin: 16px 0 20px 0;
   transition: box-shadow 0.3s, border 0.3s;
 }

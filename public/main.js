@@ -15,8 +15,10 @@ let oppStuns = {};
 let oppStunInterval = null;
 let latestScores = {};
 let lastReveals = {};
+let minesLeft = 0; // 전역변수 선언
 let gameStarted = false;
 let canParticipate = true;
+let victoryInfo = {}; // [NEW] 승리까지 남은 마인 정보
 const myId = () => socket.id;
 
 // [추가] 턴타이머를 playerSlot에서 표시
@@ -68,14 +70,14 @@ function getOrderedPlayers(playersRaw, hostId) {
   return arr;
 }
 function updateAllPlayerSlots() {
-  renderPlayerSlots(getOrderedPlayers(players, hostId), latestScores, oppStuns);
+  renderPlayerSlots(getOrderedPlayers(players, hostId), latestScores, oppStuns, victoryInfo);
 }
 function getPlayerColor(playerId) {
   const colorMap = getPlayerColorMap();
   return colorMap[playerId] || "#bbb";
 }
 
-function renderPlayerSlots(playersArr, scores = {}, stuns = {}) {
+function renderPlayerSlots(playersArr, scores = {}, stuns = {}, victory = {}) {
   const colorMap = getPlayerColorMap();
   const container = document.getElementById('playerSlots');
   container.innerHTML = '';
@@ -89,6 +91,14 @@ function renderPlayerSlots(playersArr, scores = {}, stuns = {}) {
           <span class="slot-name">${pl.name}</span>`;
       // 스턴 표시
       if (stuns[pl.id]) inner += `<span class="slot-stun">스턴 ${stuns[pl.id]}s</span>`;
+      // [추가] 승리까지 남은 마인 표시
+      if (victory && victory[pl.id] !== undefined) {
+        if (victory[pl.id] <= 0) {
+          inner += `<span class="slot-victory">🎉승리!</span>`;
+        } else {
+          inner += `<span class="slot-victory">- ${victory[pl.id]}</span>`;
+        }
+      }
       // [추가] 타이머 표시(턴 유저일 때만, 턴제 모드에서만)
       if (pl.id === currentTurnPlayerId && slotTimerSec > 0 && mode === 'TURN') {
         inner += `<span class="slot-timer">⏳ ${slotTimerSec}s</span>`;
@@ -120,6 +130,11 @@ function updateStartStopButton() {
     startBtn.textContent = "게임 시작";
     startBtn.disabled = !(players.length >= 2 && iAmHost);
   }
+}
+
+function updateMinesLeftBar() {
+  const el = document.getElementById('minesLeft');
+  if (el) el.textContent = `💣 x ${minesLeft}`;
 }
 
 function updateBoardHighlight() {
@@ -228,6 +243,7 @@ socket.on('game:state', (st) => {
         socket.emit('tile:reveal', { x, y });
       }
     }, getPlayerColorMap(), lastReveals);
+    document.getElementById('minesLeft').classList.remove('hidden');
     document.getElementById('board').classList.remove('hidden');
     hideResult();
     oppStuns = {};
@@ -266,7 +282,7 @@ socket.on('option:update', (opt) => {
 socket.on('turn:update', ({ turnPlayer }) => {
   const prev = currentTurnPlayerId;
   currentTurnPlayerId = turnPlayer;
-  renderPlayerSlots(players, latestScores, oppStuns);
+  renderPlayerSlots(players, latestScores, oppStuns, victoryInfo);
   updateBoardHighlight();
 });
 
@@ -279,11 +295,11 @@ socket.on('timer:reset', ({ remaining }) => {
 
 function updateSlotTimer() {
   clearInterval(slotTimerHandle);
-  renderPlayerSlots(players, latestScores, oppStuns);
+  renderPlayerSlots(players, latestScores, oppStuns, victoryInfo);
   if (slotTimerSec > 0) {
     slotTimerHandle = setInterval(() => {
       slotTimerSec -= 1;
-      renderPlayerSlots(players, latestScores, oppStuns);
+      renderPlayerSlots(players, latestScores, oppStuns, victoryInfo);
       if (slotTimerSec <= 0) {
         clearInterval(slotTimerHandle);
         slotTimerHandle = null;
@@ -298,9 +314,12 @@ socket.on('tile:update', (u) => {
     updateTile(u, getPlayerColorMap(), lastReveals, grid, W, H);
   }
 });
-socket.on('score:update', ({ scores }) => {
+socket.on('score:update', ({ scores, victoryInfo: vinfo, minesLeft: left }) => {
   latestScores = scores;
+  victoryInfo = vinfo || {};
+  if (typeof left === 'number') minesLeft = left;
   updateAllPlayerSlots();
+  updateMinesLeftBar();
 });
 socket.on('stun:start', ({ duration }) => startLocalStun(duration));
 socket.on('stun:active', ({ remaining }) => startLocalStun(remaining));
