@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minesweeper Online</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 상단바: 가로 한줄 그대로 -->
+  <div id="topbar">
+    <input id="name" placeholder="닉네임" />
+    <button id="create">방 만들기</button>
+    <input id="roomId" placeholder="방 코드" />
+    <button id="join">참가</button>
+    <span id="roomCode"></span>
+    <div id="turn"></div>
+    <div id="timer"></div>
+  </div>
+  <!-- 플레이어 상태 바 (8칸 가로 고정) -->
+  <div id="playerSlots"></div>
+  <div id="container">
+    <div id="boardWrap">
+      <!-- 기존 statusBar/scores는 숨김 또는 제거 -->
+      <!-- <div id="statusBar" class="hidden"> ... </div> -->
+      <div id="board" class="hidden"></div>
+      <div id="result" class="hidden"></div>
+      <div id="stunSlot"><div id="stunMsg" class="hidden"></div></div>
+      <div id="startBtnWrap"><button id="start" disabled>게임 시작</button></div>
+    </div>
+    <!-- 우측 옵션 패널 -->
+    <aside id="options">
+      <h3>게임 옵션</h3>
+      <div class="opt-row">
+        <label>모드
+          <select id="mode">
+            <option value="TURN">턴제</option>
+            <option value="REALTIME">실시간</option>
+          </select>
+        </label>
+      </div>
+      <div class="opt-row turn-only">
+        <label>턴 제한(초)
+          <input id="turnSeconds" type="number" min="1" value="10" />
+        </label>
+      </div>
+      <div class="opt-row realtime-only">
+        <label>스턴(1칸)
+          <input id="stunSmall" type="number" min="0" value="3" />
+        </label>
+      </div>
+      <div class="opt-row realtime-only">
+        <label>스턴(광역)
+          <input id="stunBig" type="number" min="0" value="10" />
+        </label>
+      </div>
+      <hr />
+      <h4>맵 설정</h4>
+      <div class="opt-row">
+        <label>가로(W)
+          <input id="width" type="number" min="5" value="16" />
+        </label>
+      </div>
+      <div class="opt-row">
+        <label>세로(H)
+          <input id="height" type="number" min="5" value="16" />
+        </label>
+      </div>
+      <div class="opt-row">
+        <label>지뢰 수
+          <div class="rangeRow">
+            <label class="miniLabel" for="minesMin">최소(min)</label>
+            <input id="minesMin" type="number" value="41" min="1" placeholder="예: 31" />
+            <label class="miniLabel" for="minesMax">최대(max)</label>
+            <input id="minesMax" type="number" value="41" min="1" placeholder="예: 51" />
+          </div>
+          <small class="rangeHint">입력한 최소~최대 사이에서 <b>홀수</b> 개로 랜덤 결정됩니다.</small>
+        </label>
+      </div>
+    </aside>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
