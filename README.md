@@ -28,7 +28,7 @@ Handles static file serving for the frontend as well as WebSocket handlers.
 ***server/game.js***
 Contains functions related to individual game instances.
 
-**Server Code Notes**
+**!Server Code Notes!**
 
 Many game-related functions are currently implemented directly in server.js.
 Core game logic is split between WebSocket handlers, functions within server.js, and game.js.
@@ -48,7 +48,7 @@ Contains runtime logic for dynamically handling HTML elements.
 ***public/ui.js***
 Contains modular code for updating specific HTML elements during runtime.
 
-**Client Code Notes**
+**!Client Code Notes!**
 
 Similar to the server, the client code currently has significant cohesion and code organization issues.
 Game instance management is not well separated conceptually, and related variables are handled in a fragmented way within main.js.
