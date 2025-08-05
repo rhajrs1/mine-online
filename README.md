@@ -6,7 +6,7 @@
 Online Minesweeper Duel is a multiplayer web-based Minesweeper game where you compete with up to 7 players to uncover the most mines.
 Unlike traditional Minesweeper, victory goes to the player who finds the most mines. Both turn-based and real-time game modes are supported, and various options allow you to adjust the game difficulty for each mode.
 
-Try the live demo → mine.meetat.org
+[Online Demo](https://mine.meetat.org/)
 <img width="997" height="769" alt="image" src="https://github.com/user-attachments/assets/aa7d090a-402f-4288-bda4-31a82748ec74" />
 
 
@@ -20,12 +20,11 @@ Try the live demo → mine.meetat.org
 
 ### Project Background
 
-This project was built using GPT as the primary code generator.
-All core logic and game mechanics were developed and refined with the help of AI, and critical errors or abnormal behaviors have been carefully checked and resolved.
-The codebase demonstrates the possibilities and limitations of AI-assisted software development.
+This project was 100% developed by AI (GPT)—from architecture and logic to actual code.
+No human coding, design, or code review was performed during initial development.
+Critical errors and abnormal behaviors have been checked and patched, but the overall code is a direct result of fully automated AI coding.
 
-Note: The source code is focused purely on functionality and rapid prototyping.
-It is not intended as an example of best practices in education, code organization, or software architecture.
+Note: The code is provided purely for demonstration purposes, and should not be used as a reference for best practices, code organization, or educational material.
 
 
 ### Quick Start
