@@ -29,6 +29,7 @@ Handles static file serving for the frontend as well as WebSocket handlers.
 Contains functions related to individual game instances.
 
 **Server Code Notes**
+
 Many game-related functions are currently implemented directly in server.js.
 Core game logic is split between WebSocket handlers, functions within server.js, and game.js.
 Ideally, server.js should only handle service-related logic, while game.js focuses on game instance management and state handling. Internal game logic could be further encapsulated in a separate gameLogics.js file for better cohesion.
@@ -48,6 +49,7 @@ Contains runtime logic for dynamically handling HTML elements.
 Contains modular code for updating specific HTML elements during runtime.
 
 **Client Code Notes**
+
 Similar to the server, the client code currently has significant cohesion and code organization issues.
 Game instance management is not well separated conceptually, and related variables are handled in a fragmented way within main.js.
 Ideally, main.js should only be responsible for client initialization and high-level instance management.
