@@ -1,56 +1,84 @@
 ## Online Minesweeper Duel
 
+
 ### Overview
-This is an online multiplayer Minesweeper game where you compete against up to 7 other players to find as many mines as possible.
-Unlike classic Minesweeper, the winner is the player who uncovers the most mines.
 
-Both turn-based and real-time modes are supported, and you can adjust game difficulty through various mode-specific options.
+Online Minesweeper Duel is a multiplayer web-based Minesweeper game where you compete with up to 7 players to uncover the most mines.
+Unlike traditional Minesweeper, victory goes to the player who finds the most mines. Both turn-based and real-time game modes are supported, and various options allow you to adjust the game difficulty for each mode.
 
-### Notice
-This codebase was created entirely using GPT.
-While all critical errors and abnormal behaviors have been carefully reviewed and corrected, the code is written solely for functional purposes.
-It is not recommended for use as an educational resource or for learning development best practices.
-
-### Demo
-https://mine.meetat.org/
-
+Try the live demo → mine.meetat.org
 <img width="997" height="769" alt="image" src="https://github.com/user-attachments/assets/aa7d090a-402f-4288-bda4-31a82748ec74" />
 
 
-## Project Structure
+### Key Features
 
-### Server
+- Multiplayer: Play with up to 7 opponents online
+- Flexible Game Modes: Enjoy both turn-based and real-time play
+- Customizable Difficulty: Fine-tune game options to match your preferred challenge level
+- Modern Web Tech: Lightweight implementation using JavaScript and WebSockets
 
-***server/server.js***
-Main entry point for backend logic.
-Handles static file serving for the frontend as well as WebSocket handlers.
 
-***server/game.js***
-Contains functions related to individual game instances.
+### Project Background
 
-**!Server Code Notes!**
+This project was built using GPT as the primary code generator.
+All core logic and game mechanics were developed and refined with the help of AI, and critical errors or abnormal behaviors have been carefully checked and resolved.
+The codebase demonstrates the possibilities and limitations of AI-assisted software development.
 
-Many game-related functions are currently implemented directly in server.js.
-Core game logic is split between WebSocket handlers, functions within server.js, and game.js.
-Ideally, server.js should only handle service-related logic, while game.js focuses on game instance management and state handling. Internal game logic could be further encapsulated in a separate gameLogics.js file for better cohesion.
+Note: The source code is focused purely on functionality and rapid prototyping.
+It is not intended as an example of best practices in education, code organization, or software architecture.
 
-### Client
 
-***public/index.html***
-Contains all HTML elements needed for the UI.
+### Quick Start
+Clone the repository
 
-***public/style.css***
-CSS styles for the UI layout and appearance.
+Run node server/server.js
 
-***public/main.js***
-Contains runtime logic for dynamically handling HTML elements.
+Open http://localhost:3000 in your browser
+(or use the online demo link above)
 
-***public/ui.js***
-Contains modular code for updating specific HTML elements during runtime.
 
-**!Client Code Notes!**
+### Project Structure
 
-Similar to the server, the client code currently has significant cohesion and code organization issues.
-Game instance management is not well separated conceptually, and related variables are handled in a fragmented way within main.js.
-Ideally, main.js should only be responsible for client initialization and high-level instance management.
-A separate manager for server communication, clearer object-oriented structure for each game instance, and improved separation of UI update logic into dedicated files are all recommended improvements.
+**Server**
+
+server/server.js:
+Main entry point for backend logic, including static file serving and WebSocket handlers.
+
+server/game.js:
+Functions and logic related to individual game instances.
+
+Server-side Note:
+Some game logic is distributed between server.js, WebSocket handlers, and game.js.
+For better maintainability, it is recommended to isolate game instance management in game.js and reserve server.js for service entry points. Further refactoring and separation (e.g., moving internal logic to gameLogics.js) will improve cohesion.
+
+
+***Client***
+
+public/index.html:
+Main UI structure.
+
+public/style.css:
+UI styling.
+
+public/main.js:
+Client-side dynamic logic and HTML event handling.
+
+public/ui.js:
+Modular functions for UI element updates.
+
+Client-side Note:
+Current code structure lacks clear separation of concerns—game instance logic and variables are fragmented across files, especially main.js.
+Further improvements could include better instance management, dedicated server communication managers, and more organized UI update modules.
+
+
+### Future Improvements
+
+Improve code cohesion and modularity, both server- and client-side
+
+Refactor game instance management and UI update handling
+
+Enhance documentation and developer onboarding experience
+
+### License
+
+This project is open-source and welcomes feedback, refactoring, and community-driven improvements.
